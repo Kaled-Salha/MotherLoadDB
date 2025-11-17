@@ -42,7 +42,7 @@ namespace MotherLoadDB.Data
         public async Task<bool> DeleteCompany(int id)
         {
             var company = await _context.Companies.FindAsync(id);
-            if(company == null)
+            if (company == null)
             {
                 return false;
             }

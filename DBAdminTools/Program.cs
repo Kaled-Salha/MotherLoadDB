@@ -43,12 +43,15 @@ namespace DBAdminTools
                         await ViewAllCompanies(dbService);
                         break;
                     case "4":
+                        await SearchCompany(dbService);
                         break;
                     case "5":
+                        await DeleteCompany(dbService);
                         break;
                     case "6":
                         break;
                     case "7":
+                        await ShowStatistics(dbService);
                         break;
                     case "0":
                         break;
@@ -126,8 +129,43 @@ namespace DBAdminTools
             }
         }
 
+        static async Task SearchCompany(DbService dbService)
+        {
+            Console.Write("Enter company id: ");
+
+            if (int.TryParse(Console.ReadLine(), out int id))
+            {
+                var company = await dbService.GetCompany(id);
+
+                if (company != null)
+                {
+                    Console.WriteLine($"{company.Name}");
+                    Console.WriteLine($"{company.OrgNumber}");
+
+                } else
+                {
+                    Console.WriteLine("Company not found!");
+                }
+            }
+        }
 
 
+        static async Task DeleteCompany(DbService dbService)
+        {
+            Console.WriteLine("Enter ID of company to remove: ");
+            if (int.TryParse(Console.ReadLine(), out int id))
+            {
+                var sucess = await dbService.DeleteCompany(id);
+                Console.WriteLine(sucess ? "Company deleted succesfully" : "Company not found");
+            }
+        }
+
+        static async Task ShowStatistics(DbService dbService)
+        {
+            var companies = await dbService.GetCompanies();
+            Console.WriteLine($"Total companies: {companies.Count}");
+            Console.WriteLine($"Cities: {companies.Select(c => c.City).Distinct().Count()}");
+        }
 
     }
 }
